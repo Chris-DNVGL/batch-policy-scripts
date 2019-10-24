@@ -1,6 +1,4 @@
 Write-Warning "Starting"
-$test= "$($hello)"
+$test= "$(hello)"
 Write-Warning $test
-$policyDefRootFolder = "$($(System.DefaultWorkingDirectory))"
-Write-Warning $policyDefRootFolder
 Write-Warning "Ending"
