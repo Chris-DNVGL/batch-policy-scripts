@@ -1,6 +1,6 @@
 Write-Warning "Starting"
-
-$policyDefRootFolder = "$(System.DefaultWorkingDirectory)/Policies_Repo/policies"
+$policyDefRootFolder = "$($systemRoot)/Policies_Repo/policies"
+# $policyDefRootFolder = "$(System.DefaultWorkingDirectory)/Policies_Repo/policies"
 $subscriptionName = "$(subscriptionName)"
 
 Write-Warning "policyDefRootFolder==[$($policyDefRootFolder)]"
