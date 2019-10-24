@@ -1,5 +1,10 @@
+Write-Warning "Starting"
+
 $policyDefRootFolder = "$(System.DefaultWorkingDirectory)/Policies_Repo/policies"
 $subscriptionName = "$(subscriptionName)"
+
+Write-Warning "policyDefRootFolder==[$($policyDefRootFolder)]"
+Write-Warning "subscriptionName==[$($subscriptionName)]"
 
 class PolicyDef {
     [string]$PolicyName
@@ -46,6 +51,8 @@ function Add-Policies {
     }
     return $policyDefList
 }
+
+Write-Warning "Starting main execution"
 
 $subscriptionId = (Get-AzureRmSubscription -SubscriptionName $subscriptionName).Id
 Write-Verbose $policyDefRootFolder
