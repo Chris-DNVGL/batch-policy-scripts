@@ -1,10 +1,5 @@
-Write-Warning "Starting"
-$policyDefRootFolder = "$($systemRoot)/Policies_Repo/policies"
-# $policyDefRootFolder = "$(System.DefaultWorkingDirectory)/Policies_Repo/policies"
+$policyDefRootFolder = "$(System.DefaultWorkingDirectory)/Policies/policies"
 $subscriptionName = "$(subscriptionName)"
-
-Write-Warning "policyDefRootFolder==[$($policyDefRootFolder)]"
-Write-Warning "subscriptionName==[$($subscriptionName)]"
 
 class PolicyDef {
     [string]$PolicyName
@@ -24,11 +19,17 @@ function Select-Policies {
     Write-Verbose "Processing policies"
     $policyList = @()
     foreach ($policyDefinition in $PolicyFolders) {
+        if([System.IO.File]::Exists($($policyDefinition.FullName + "\policydef.json"))){
         $policy = New-Object -TypeName PolicyDef
         $policy.PolicyName = $policyDefinition.Name
         $policy.PolicyRulePath = $($policyDefinition.FullName + "\policydef.json")
+        
         $policy.PolicyParamPath = $($policyDefinition.FullName + "\policydef.params.json")
         $policyList += $policy
+        }
+        else{
+            continue
+        }
     }
 
     return $policyList
@@ -51,8 +52,6 @@ function Add-Policies {
     }
     return $policyDefList
 }
-
-Write-Warning "Starting main execution"
 
 $subscriptionId = (Get-AzureRmSubscription -SubscriptionName $subscriptionName).Id
 Write-Verbose $policyDefRootFolder

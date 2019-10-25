@@ -1,9 +1,0 @@
-{
-    "listofAllowedLocations": {
-        "value": [
-            "eastus",
-            "eastus2",
-            "centralus"
-        ]
-    }
-}

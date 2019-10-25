@@ -1,4 +1,4 @@
-$initiativeDefRootFolder = "$(System.DefaultWorkingDirectory)/Policyasfolder Repo/initiatives"
+$initiativeDefRootFolder = "$(System.DefaultWorkingDirectory)/Policies/initiative"
 $subscriptionName = "$(subscriptionName)"
 
 class InitiativeDef {
@@ -14,7 +14,7 @@ function Select-Initiatives {
         [System.IO.DirectoryInfo[]]$InitiativeFolders
     )
 
-    Write-Verbose "Processing initiatives"
+    Write-Warning "Processing initiatives"
     $initiativeList = @()
     foreach ($initiativeDefinition in $InitiativeFolders) {
         $initiative = New-Object -TypeName InitiativeDef
@@ -35,24 +35,27 @@ function Add-Initiatives {
         [String]$subscriptionId
     )
 
-    Write-Verbose "Creating Initiatives definitions"
+    Write-Warning "Creating Initiatives definitions"
     $initiativeDefList = @()
     foreach ($initiative in $Initiatives) {
-        $initiativeDef = New-AzureRmPoliicySetDefinition -Name $initiative.InitiativeName -PolicyDefinition $initiative.InitiativeRulePath  -SubscriptionId $subscriptionId -Metadata '{"category":"Pipeline"}'
+        Write-Warning "starting Initiatives definitions"
+        $initiativeDef = New-AzureRmPolicySetDefinition -Name $initiative.InitiativeName -PolicyDefinition $initiative.InitiativeRulePath  -SubscriptionId $subscriptionId -Metadata '{"category":"Pipeline"}'
+        Write-Warning "made Initiatives definitions"
         $initiativeDefList += $initiativeDef
     }
+    Write-Warning "before return Initiatives definitions"
     return $initiativeDefList
 }
 
 $subscriptionId = (Get-AzureRmSubscription -SubscriptionName $subscriptionName).Id
-Write-Verbose $initiativeDefRootFolder
-Write-Verbose $subscriptionId
+Write-Warning $initiativeDefRootFolder
+Write-Warning $subscriptionId
 
 #get list of policy folders
 $initiative = Select-Initiatives -InitiativeFolders (Get-ChildItem -Path $initiativeDefRootFolder -Directory)
 $initiativeDefinitions = Add-Initiatives -Initiatives $initiative -subscriptionId $subscriptionId
-$initiativeDefsJson = ($initiativeDefinitions | ConvertTo-Json -Depth 10 -Compress)
+#$initiativeDefsJson = ($initiativeDefinitions | ConvertTo-Json -Depth 10 -Compress)
 
-Write-Host "##vso[task.setvariable variable=PolicyDefs]$initiativeDefsJson"
+#Write-Host "##vso[task.setvariable variable=PolicyDefs]$initiativeDefsJson"
 
 
