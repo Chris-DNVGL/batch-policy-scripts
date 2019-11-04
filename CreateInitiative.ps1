@@ -35,21 +35,16 @@ function Add-Initiatives {
         [String]$subscriptionId
     )
 
-    Write-Warning "Creating Initiatives definitions"
     $initiativeDefList = @()
     foreach ($initiative in $Initiatives) {
-        Write-Warning "starting Initiatives definitions"
         $initiativeDef = New-AzureRmPolicySetDefinition -Name $initiative.InitiativeName -PolicyDefinition $initiative.InitiativeRulePath  -SubscriptionId $subscriptionId -Metadata '{"category":"Pipeline"}'
-        Write-Warning "made Initiatives definitions"
         $initiativeDefList += $initiativeDef
     }
-    Write-Warning "before return Initiatives definitions"
     return $initiativeDefList
 }
 
 $subscriptionId = (Get-AzureRmSubscription -SubscriptionName $subscriptionName).Id
-Write-Warning $initiativeDefRootFolder
-Write-Warning $subscriptionId
+
 
 #get list of policy folders
 $initiative = Select-Initiatives -InitiativeFolders (Get-ChildItem -Path $initiativeDefRootFolder -Directory)
@@ -57,5 +52,3 @@ $initiativeDefinitions = Add-Initiatives -Initiatives $initiative -subscriptionI
 #$initiativeDefsJson = ($initiativeDefinitions | ConvertTo-Json -Depth 10 -Compress)
 
 #Write-Host "##vso[task.setvariable variable=PolicyDefs]$initiativeDefsJson"
-
-
